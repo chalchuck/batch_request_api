@@ -15,7 +15,7 @@ module BatchRequestApi
 
     def initialize
       self.batch_sequential_paths = ['/api/v1/batch_sequential']
-      self.batch_parallel_paths = ['/api/v1/batch_parallel']
+      self.batch_parallel_paths   = ['/api/v1/batch_parallel']
     end
   end
 end

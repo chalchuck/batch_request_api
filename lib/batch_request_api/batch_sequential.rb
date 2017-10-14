@@ -5,7 +5,7 @@ module BatchRequestApi
     include BatchUtil
 
     def batch_sequential(env)
-      requests = get_payload(env)
+      requests  = get_payload(env)
       responses = requests.map do |item|
         process_request(env.deep_dup, item)
       end
@@ -23,10 +23,13 @@ module BatchRequestApi
       def handoff_to_rails(env)
         status, headers, body = @app.call(env)
         body.close if body.respond_to? :close
+
+        response_body = (body.try(:body) or body.try(:join))
+
         if status == 200
-          { status: status, headers: headers, response: JSON.parse(body.join) }
+          { status: status, headers: headers, response: JSON.parse(response_body) }
         else
-          { status: status, headers: headers, response: JSON.parse(body.body) }
+          { status: status, headers: headers, response: JSON.parse(response_body) }
         end
       end
 
